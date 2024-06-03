@@ -1,0 +1,107 @@
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form {
+    padding: 20px;
+    margin: 30px auto 0 auto;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 60%;
+}
+
+.field {
+    margin-bottom: 15px;
+}
+
+.field div {
+    display: flex;
+    align-items: center;
+}
+
+.inputField {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.removeButton {
+    margin-left: 10px;
+    padding: 6px 10px;
+    background-color: #ff4444;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+.buttons button {
+    margin-right: 10px;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.AddButton{
+    background-color: #001529;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+}
+
+.AddButton:hover{
+    background-color: #001529 !important;
+    color: #FFFFFF !important;
+    border: none;
+    border-radius: 4px;
+}
+
+.addFieldContainer{
+    margin: 10px;
+}
+
+.addFieldSelect{
+    width: 100%;
+    margin: 10px 0
+}
+
+.sidebarLabel{
+    color: #001529;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.defaultButtonStyle{
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #001529;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.row{
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+    }
+}
