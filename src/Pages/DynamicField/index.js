@@ -25,6 +25,7 @@ const DynamicForm = () => {
     const [addFieldDisabled, setAddFieldDisabled] = useState(true);
     const [selectedUserName, setSelectedUserName] = useState();
     const [selectedUserPermission, setSelectedUserPermission] = useState();
+    const [mediaOption, setMediaOption] = useState('');
 
     useEffect(() => {
         getUserList()
@@ -61,6 +62,10 @@ const DynamicForm = () => {
 
     const handleDefaultInputChange = (e) => {
         setDefaultValue(e.target.value);
+    };
+
+    const handleMediaOptionChange = (value) => {
+        setMediaOption(value);
     };
 
     const handleSelectOptionInputChange = (index, value) => {
@@ -153,53 +158,15 @@ const DynamicForm = () => {
                     fieldIsRequired: fieldIsRequired ? 1 : 0
                 };
                 break;
-            case 'single-image':
-                newField = {
-                    fieldLabel: labelInput,
-                    fieldType: 'media',
-                    fieldSubType: '1_image',
-                    fieldVal: defaultValue,
-                    fieldOptions: '',
-                    fieldIsRequired: fieldIsRequired ? 1 : 0
-                };
-                break;
-            case 'multiple-images':
-                newField = {
-                    fieldLabel: labelInput,
-                    fieldType: 'media',
-                    fieldSubType: 'image',
-                    fieldVal: defaultValue,
-                    fieldOptions: '',
-                    fieldIsRequired: fieldIsRequired ? 1 : 0
-                };
-                break;
-            case 'single-video':
-                newField = {
-                    fieldLabel: labelInput,
-                    fieldType: 'media',
-                    fieldSubType: '1_video',
-                    fieldVal: defaultValue,
-                    fieldOptions: '',
-                    fieldIsRequired: fieldIsRequired ? 1 : 0
-                };
-                break;
-            case 'multiple-videos':
-                newField = {
-                    fieldLabel: labelInput,
-                    fieldType: 'media',
-                    fieldSubType: 'video',
-                    fieldVal: defaultValue,
-                    fieldOptions: '',
-                    fieldIsRequired: fieldIsRequired ? 1 : 0
-                };
-                break;
+            case 'image':
+            case 'video':
             case 'media':
                 newField = {
-                    fieldLabel: labelInput,
+                    fieldLabel: labelInput || "Attachments", // Use labelInput or default to "Attachments"
                     fieldType: 'media',
-                    fieldSubType: '',
-                    fieldVal: defaultValue,
-                    fieldOptions: '',
+                    fieldSubType: fieldType !== 'media' ? fieldType : '',
+                    fieldVal: defaultValue || "Select", // Use defaultValue or default to "Select"
+                    fieldOptions: mediaOption,
                     fieldIsRequired: fieldIsRequired ? 1 : 0
                 };
                 break;
@@ -215,6 +182,7 @@ const DynamicForm = () => {
         setDefaultValue('');
         setSelectOptions(['']);
         setFieldType('');
+        setMediaOption('')
         setFieldIsRequired(false);
     };
 
@@ -279,11 +247,9 @@ const DynamicForm = () => {
                         <Option value="textarea">Textarea</Option>
                         <Option value="select-input">Select</Option>
                         <Option value="radio">Radio</Option>
-                        <Option value="single-image">Single Image</Option>
-                        <Option value="multiple-images">Multiple Images</Option>
-                        <Option value="single-video">Single Video</Option>
-                        <Option value="multiple-videos">Multiple Videos</Option>
-                        <Option value="media">Media (Images/Videos)</Option>
+                        <Option value="image">Image</Option>
+                        <Option value="video">Video</Option>
+                        <Option value="media">Media</Option>
                     </Select>
                     {['date', 'datetime-local', 'email', 'tel', 'number', 'password', 'text', 'textarea'].includes(fieldType) && (
                         <>
@@ -379,24 +345,33 @@ const DynamicForm = () => {
                             <Button style={{margin: '5px 0'}} disabled={addOptionDisabled} onClick={handleAddOption}>Add Multiple Options</Button>
                         </div>
                     )}
-                    {['single-image', 'multiple-images', 'single-video', 'multiple-videos', 'media'].includes(fieldType) && (
-                        <div>
-                            <div className={"sidebarLabel"}>Add Default value</div>
-                            <Input
-                                type="text"
-                                placeholder="Set Default value"
-                                value={defaultValue}
-                                onChange={handleDefaultInputChange}
-                                className={'addFieldSelect'}
-                            />
-                            <div className={"sidebarLabel"}>{`Add ${fieldType}`}</div>
-                            <Input
-                                type="text"
-                                placeholder="Enter field label"
-                                value={labelInput}
-                                onChange={handleLabelInputChange}
-                                className={'addFieldSelect'}
-                            />
+                    {(fieldType === 'image' || fieldType === 'video' || fieldType === 'media') && (
+                        <div className={'optionsContainer'}>
+                            <div>
+                                <div className={"sidebarLabel"}>Add Default value</div>
+                                <Input
+                                    type="text"
+                                    placeholder="Set Default value"
+                                    value={defaultValue}
+                                    onChange={handleDefaultInputChange}
+                                    className={'addFieldSelect'}
+                                />
+                                <div className={"sidebarLabel"}>{`Add ${fieldType}`}</div>
+                                <Input
+                                    type="text"
+                                    placeholder="Enter field label"
+                                    value={labelInput}
+                                    onChange={handleLabelInputChange}
+                                    className={'addFieldSelect'}
+                                />
+                            </div>
+                            <div className="sidebarLabel">Media Options:</div>
+                            <Select value={mediaOption} onChange={handleMediaOptionChange} className={'mediaOptionSelect'} style={{width: '100%'}}>
+                                <Option value="">Select Media Option</Option>
+                                {Array.from({ length: 7 }, (_, i) => i + 1).map(num => (
+                                    <Option key={num} value={num.toString()}>{num}</Option>
+                                ))}
+                            </Select>
                         </div>
                     )}
                     {fieldType && (
@@ -410,7 +385,7 @@ const DynamicForm = () => {
                                 style={{ margin: "5px 5px"}}
                             />
                             </div>
-                            <Button disabled={fieldType === 'checkbox' || fieldType === 'radio' || fieldType === 'select-input' ? addFieldDisabled : false} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
+                            <Button disabled={fieldType === 'checkbox' || fieldType === 'radio' || fieldType === 'select-input' || mediaOption === '' ? addFieldDisabled : false} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
                         </div>
                     )}
                 </div>
@@ -474,13 +449,12 @@ const DynamicForm = () => {
 
                                         {field.fieldType === 'media' && (
                                             <div>
-                                                <input
-                                                    type={field.fieldSubType.startsWith('1_') ? 'file' : 'file'}
-                                                    accept={field.fieldSubType.includes('image') ? 'image/*' : field.fieldSubType.includes('video') ? 'video/*' : 'image/*,video/*'}
-                                                    multiple={!field.fieldSubType.startsWith('1_')}
-                                                    disabled
-                                                />
-                                                <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                <label>{field.fieldVal}</label>
+                                                <Select defaultValue={field.fieldOptions}>
+                                                    {Array.from({ length: 7 }, (_, i) => i + 1).map(num => (
+                                                        <Option key={num} value={num.toString()}>{num}</Option>
+                                                    ))}
+                                                </Select>
                                             </div>
                                         )}
                                     </div>
