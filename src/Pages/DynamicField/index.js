@@ -99,8 +99,17 @@ const DynamicForm = () => {
     };
 
     const handlePermissionChange = value => {
-        console.log('value------------------------', value)
-        setSelectedUserPermission(value);
+        if (value.includes("All")) {
+            if (value.length === 1) {
+                const allPermissions = permissionList.map(item => item.name);
+                setSelectedUserPermission(allPermissions);
+            } else {
+                setSelectedUserPermission(permissionList.map(item => item.name));
+            }
+        } else {
+            setSelectedUserPermission(value);
+        }
+        console.log('Selected permissions:', value);
     };
 
     const addField = (e) => {
@@ -212,7 +221,7 @@ const DynamicForm = () => {
 
     const addPermission = (e) => {
         e.preventDefault();
-        if(selectedUserPermission.length > 0 && selectedUserName){
+        if(selectedUserPermission?.length > 0 && selectedUserName){
             const payload = {
                 roleId: selectedUserName,
                 permissions: JSON.stringify(selectedUserPermission)
@@ -489,7 +498,14 @@ const DynamicForm = () => {
                                 </div>
                                 <div className='col-md-6'>
                                     <div className={"sidebarLabel"}>Select Permission</div>
-                                    <Select mode="multiple" placeholder="Select a Permission"  onChange={handlePermissionChange} style={{ width: '100%' }}>
+                                    <Select
+                                        mode="multiple"
+                                        placeholder="Select a Permission"
+                                        onChange={handlePermissionChange}
+                                        value={selectedUserPermission}
+                                        style={{ width: '100%' }}
+                                    >
+                                        <Option key="all" value="All">All</Option>
                                         {permissionList.map(item => (
                                             <Option key={item.id} value={item.name}>{item.name}</Option>
                                         ))}
