@@ -1,4 +1,5 @@
 import requests from "../api";
+import request from "./formApi"
 
 const UserGroupServices = {
   createUserGroup: async (body) => {
@@ -21,6 +22,12 @@ const UserGroupServices = {
   },
   addPermission: async (body) => {
     return requests.post(`/role/sync`, body);
+  },
+  formList: async (body) => {
+    return request.get(`/api/temp-form-type-list`);
+  },
+  deleteForm: async (id) => {
+    return request.get(`/api/temp-form-type/${id}/delete`);
   },
 };
 

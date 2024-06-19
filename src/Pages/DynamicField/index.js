@@ -6,6 +6,7 @@ import UserGroupServices from "../../Service/UserGroupServices";
 
 import { Tree, Checkbox } from 'antd';
 import { Toast, notifySuccess, notifyError } from '../../Components/ToastComponents';
+import FormTable from "./FormTable";
 const { Sider, Content } = Layout;
 const { Option } = Select;
 
@@ -26,11 +27,28 @@ const DynamicForm = () => {
     const [selectedUserName, setSelectedUserName] = useState();
     const [selectedUserPermission, setSelectedUserPermission] = useState();
     const [mediaOption, setMediaOption] = useState('');
+    const [formList, setFormList] = useState();
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [editFormId, setEditFormId] = useState(null);
+    const [editFormName, setEditFormName] = useState(null);
+    const [publishForm, setPublishForm] = useState(1);
 
     useEffect(() => {
         getUserList()
         getPermissionList()
+        getFormList()
     }, [])
+
+
+    function getFormList() {
+        UserGroupServices.formList().then((resp) => {
+            if (resp.list) {
+                setFormList(resp?.list)
+            }
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
 
     function getUserList() {
         UserGroupServices.userTree().then((resp) => {
@@ -51,6 +69,24 @@ const DynamicForm = () => {
             console.log(error)
         })
     }
+
+    const handleEdit = (form) => {
+        setEditFormId(form.id);
+        setEditFormName(form.name)
+        const formData = JSON.parse(JSON.parse(form.form_fields) );
+        setFormFields(formData);
+    };
+
+    const handleDelete = formId => {
+        UserGroupServices.deleteForm(formId).then((resp) => {
+            if (resp) {
+                notifySuccess('form delete successFully')
+                getFormList()
+            }
+        }).catch((error) => {
+            console.log(error)
+        })
+    };
 
     const handleFieldTypeChange = (value) => {
         setFieldType(value);
@@ -205,17 +241,36 @@ const DynamicForm = () => {
         e.preventDefault()
 
         if(formFields?.length > 0) {
-            setFormJson(JSON.stringify(formFields, null, 2));
-            axios.post("https://hamiltondinnerapp.intellidt.com/api/temp-form-save-by-user", {
-                name: "General Form",
-                fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
-            })
-                .then((response) => {
-                    notifySuccess(`Form Json add SuccessFully`);
-                    setFormFields([])
-                }).catch(() => {
-                notifyError(`Something went wrong`);
-            })
+            if(editFormId) {
+                setFormJson(JSON.stringify(formFields, null, 2));
+                axios.post("https://hamiltondinnerapp.intellidt.com/api/temp-form-save-by-user", {
+                    form_id: editFormId,
+                    name: editFormName,
+                    is_published: publishForm ? 1 : 0,
+                    fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
+                })
+                    .then((response) => {
+                        notifySuccess(`Form Json add SuccessFully`);
+                        getFormList()
+                        setFormFields([])
+                    }).catch(() => {
+                    notifyError(`Something went wrong`);
+                })
+            } else {
+                setFormJson(JSON.stringify(formFields, null, 2));
+                axios.post("https://hamiltondinnerapp.intellidt.com/api/temp-form-save-by-user", {
+                    name: "General Form",
+                    is_published: publishForm ? 1 : 0,
+                    fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
+                })
+                    .then((response) => {
+                        notifySuccess(`Form Json add SuccessFully`);
+                        getFormList()
+                        setFormFields([])
+                    }).catch(() => {
+                    notifyError(`Something went wrong`);
+                })
+            }
         }
     };
 
@@ -394,7 +449,7 @@ const DynamicForm = () => {
                                 style={{ margin: "5px 5px"}}
                             />
                             </div>
-                            <Button disabled={fieldType === 'checkbox' || fieldType === 'radio' || fieldType === 'select-input' || mediaOption === '' ? addFieldDisabled : false} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
+                            <Button disabled={fieldType === 'checkbox' || fieldType === 'radio' || fieldType === 'select-input'  ? addFieldDisabled : false} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
                         </div>
                     )}
                 </div>
@@ -468,6 +523,15 @@ const DynamicForm = () => {
                                         )}
                                     </div>
                                 ))}
+                                <div>
+                                    <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Publish Form</label>
+                                    <input
+                                        type="checkbox"
+                                        checked={publishForm}
+                                        onChange={(e) => setPublishForm(!publishForm)}
+                                        style={{ margin: "5px 5px"}}
+                                    />
+                                </div>
                             </form>
                             <div style={{textAlign: 'center', margin: '30px 0'}}>
                                 <button style={{
@@ -530,6 +594,22 @@ const DynamicForm = () => {
                         </div>
                     </div>
                 </div>
+
+                <div className={'container'} style={{marginTop: '50px'}}>
+                    <div className='row'>
+                        <div style={{fontSize: '30px', fontWeight: 'bold', marginBottom: '20px'}}>Form List</div>
+                        <div className={'col-md-12'}>
+                            <FormTable
+                                formList={formList}
+                                onEdit={handleEdit}
+                                onDelete={handleDelete}
+                                setSelectedRowKeys={setSelectedRowKeys}
+                                selectedRowKeys={selectedRowKeys}
+                            />
+                        </div>
+                    </div>
+                </div>
+
             </Layout>
         </Layout>
     );
