@@ -244,7 +244,7 @@ const DynamicForm = () => {
             if(editFormId) {
                 setFormJson(JSON.stringify(formFields, null, 2));
                 axios.post("https://hamiltondinnerapp.intellidt.com/api/temp-form-save-by-user", {
-                    form_id: editFormId,
+                    id: editFormId,
                     name: editFormName,
                     is_published: publishForm ? 1 : 0,
                     fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
