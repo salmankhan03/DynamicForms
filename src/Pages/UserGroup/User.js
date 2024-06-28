@@ -119,11 +119,11 @@ const CategoryMenu = () => {
                     <div className="col-md-6"></div>
                     <div className="col-md-6 text-right">
                         <div className="button-group">
-                            <Button type="danger" onClick={handleBulkDelete}>
-                                Bulk Delete
-                            </Button>
-                            <Button type="primary" onClick={showDrawer}>
-                                + Add User
+                            {/*<Button type="danger" onClick={handleBulkDelete}>*/}
+                            {/*    Bulk Delete*/}
+                            {/*</Button>*/}
+                            <Button type="primary" onClick={showDrawer} style={{backgroundColor: '#001529'}}>
+                                + Add User Group
                             </Button>
                         </div>
                     </div>

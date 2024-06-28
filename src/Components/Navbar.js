@@ -43,7 +43,7 @@ const CustomNavbar = () => {
     };
 
     return (
-        <Navbar  expand="lg" style={{ padding: '8px 25px', background: '#001529' }}>
+        <Navbar sticky="top" expand="lg" style={{ padding: '15px 25px', background: '#001529' }}>
             <Navbar.Brand as={Link} to="/" style={{color: '#fff'}}>My Website</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">

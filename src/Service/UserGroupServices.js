@@ -23,12 +23,16 @@ const UserGroupServices = {
   addPermission: async (body) => {
     return requests.post(`/role/sync`, body);
   },
+  createForm: async (body) => {
+    return request.post("/api/temp-form-save-by-user", body);
+  },
   formList: async (body) => {
     return request.get(`/api/temp-form-type-list`);
   },
   deleteForm: async (id) => {
     return request.get(`/api/temp-form-type/${id}/delete`);
   },
+
 };
 
 export default UserGroupServices;

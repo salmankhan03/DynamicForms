@@ -164,10 +164,10 @@ const CategoryMenu = () => {
                     <div className="col-md-6"></div>
                     <div className="col-md-6 text-right">
                         <div className="button-group">
-                            <Button type="danger" onClick={handleBulkDelete}>
-                                Bulk Delete
-                            </Button>
-                            <Button type="primary" onClick={showDrawer}>
+                            {/*<Button type="danger" onClick={handleBulkDelete}>*/}
+                            {/*    Bulk Delete*/}
+                            {/*</Button>*/}
+                            <Button type="primary" onClick={showDrawer} style={{backgroundColor: '#001529'}}>
                                 + Add User
                             </Button>
                         </div>

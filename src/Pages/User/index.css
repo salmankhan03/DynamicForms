@@ -53,3 +53,11 @@
     background-color: #e9ecef;
     border-color: #e9ecef;
 }
+
+.CreateForm .modal-dialog{
+    max-width: 75% !important;
+}
+
+.react-select__menu {
+    z-index: 1050; /* Ensure it is higher than the modal backdrop */
+}

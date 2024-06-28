@@ -9,27 +9,27 @@ const FormTable = ({ formList, onEdit, onDelete, setSelectedRowKeys }) => {
     const [selectedRowKeysInternal, setSelectedRowKeysInternal] = useState([]);
 
     const columns = [
-        {
-            title: 'Select',
-            key: 'select',
-            render: (text, record) => (
-                <Checkbox
-                    onChange={(e) => {
-                        const selected = e.target.checked;
-                        const key = record.id;
-
-                        const updatedKeys = selected
-                            ? [...selectedRowKeysInternal, key]
-                            : selectedRowKeysInternal.filter((k) => k !== key);
-
-                        setSelectedRowKeysInternal(updatedKeys);
-
-                        setSelectedRowKeys(updatedKeys);
-                    }}
-                    checked={selectedRowKeysInternal.includes(record.id)}
-                />
-            ),
-        },
+        // {
+        //     title: 'Select',
+        //     key: 'select',
+        //     render: (text, record) => (
+        //         <Checkbox
+        //             onChange={(e) => {
+        //                 const selected = e.target.checked;
+        //                 const key = record.id;
+        //
+        //                 const updatedKeys = selected
+        //                     ? [...selectedRowKeysInternal, key]
+        //                     : selectedRowKeysInternal.filter((k) => k !== key);
+        //
+        //                 setSelectedRowKeysInternal(updatedKeys);
+        //
+        //                 setSelectedRowKeys(updatedKeys);
+        //             }}
+        //             checked={selectedRowKeysInternal.includes(record.id)}
+        //         />
+        //     ),
+        // },
         {
             title: 'ID',
             dataIndex: 'id',
@@ -62,7 +62,10 @@ const FormTable = ({ formList, onEdit, onDelete, setSelectedRowKeys }) => {
             <Table
                 dataSource={formList}
                 columns={columns}
-                pagination={false}
+                pagination={{
+                    pageSize: 10,
+                    defaultCurrent: 1,
+                }}
                 bordered
             />
         </div>

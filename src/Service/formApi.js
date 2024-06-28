@@ -37,7 +37,9 @@ instance.interceptors.response.use(
     },
     function (error) {
 
-        if (error.response && error.response.status === 401) {
+        console.log('error---------------------', error.response && error.response.status === 401 || error.response.status === 500)
+
+        if (error.response && error.response.status === 401 || error.response.status === 500) {
             Cookies.remove('userToken');
             localStorage.removeItem('persist:root');
             const navigate = useNavigate();
