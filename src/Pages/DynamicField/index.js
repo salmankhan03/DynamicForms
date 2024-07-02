@@ -30,6 +30,8 @@ const DynamicForm = () => {
     const [editFormId, setEditFormId] = useState(null);
     const [editFormName, setEditFormName] = useState(null);
     const [publishForm, setPublishForm] = useState(1);
+    const [isPrintAllow, setIsPrintAllow] = useState(1);
+    const [isMailAllow, setIsMailAllow] = useState(1);
     const [show, setShow] = useState(false);
     const [permissionShow, setPermissionShow] = useState(false);
 
@@ -76,6 +78,9 @@ const DynamicForm = () => {
         setEditFormName(form.name)
         const formData = JSON.parse(JSON.parse(form.form_fields) );
         setFormFields(formData);
+        setPublishForm(form.is_published)
+        setIsPrintAllow(form.allow_print)
+        setIsMailAllow(form.allow_mail)
     };
 
     const handleDelete = formId => {
@@ -246,6 +251,8 @@ const DynamicForm = () => {
                     id: editFormId,
                     name: editFormName,
                     is_published: publishForm ? 1 : 0,
+                    allow_mail: isMailAllow ? 1 : 0,
+                    allow_print: isPrintAllow ? 1 : 0,
                     fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
                 }).then((resp) => {
                     setShow(false)
@@ -258,8 +265,10 @@ const DynamicForm = () => {
             } else {
                 setFormJson(JSON.stringify(formFields, null, 2));
                 UserGroupServices.createForm({
-                    name: "General Form",
+                    name: editFormName ? editFormName : 'Dynamic form',
                     is_published: publishForm ? 1 : 0,
+                    allow_mail: isMailAllow ? 1 : 0,
+                    allow_print: isPrintAllow ? 1 : 0,
                     fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
                 }).then((resp) => {
                     setShow(false)
@@ -298,6 +307,9 @@ const DynamicForm = () => {
         setFieldType([])
         setFormFields([])
         setEditFormId('')
+        setIsMailAllow('')
+        setIsPrintAllow('')
+        setPublishForm('')
     }
 
     const handlePermissionCancel = () => {
@@ -327,6 +339,16 @@ const DynamicForm = () => {
                             <Row>
                                 <Col xs={12} sm={12} md={5}>
                                     <div className="addFieldContainer">
+                                        <div>
+                                            <div className={"sidebarLabel"}>Please Add Form Name</div>
+                                            <Input
+                                                type="text"
+                                                placeholder="Enter Form Name"
+                                                value={editFormName}
+                                                onChange={(e) => setEditFormName(e.target.value)}
+                                                className={'addFieldSelect'}
+                                            />
+                                            </div>
                                         <div className={"sidebarLabel"}>Please select Field</div>
                                         <Select value={fieldType} onChange={handleFieldTypeChange} className={'addFieldSelect'}>
                                             <Option value="">Select Field Type</Option>
@@ -487,7 +509,7 @@ const DynamicForm = () => {
                                 <Col xs={12} sm={12} md={7}>
                                     <div className="content">
                                         <form className="form">
-                                            <h4 style={{textAlign: 'center', fontWeight: 800}}>Dynamic form</h4>
+                                            <h4 style={{textAlign: 'center', fontWeight: 800}}>{editFormName ? editFormName : 'Dynamic form'}</h4>
                                             {formFields.map((field, index) => (
                                                 <div key={index} className="field" style={{ width: '100%', display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
                                                     <label>{field.fieldLabel}</label>
@@ -557,6 +579,24 @@ const DynamicForm = () => {
                                                     type="checkbox"
                                                     checked={publishForm}
                                                     onChange={(e) => setPublishForm(!publishForm)}
+                                                    style={{ margin: "5px 5px"}}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Print Form</label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isPrintAllow}
+                                                    onChange={(e) => setIsPrintAllow(!isPrintAllow)}
+                                                    style={{ margin: "5px 5px"}}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Email Form</label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isMailAllow}
+                                                    onChange={(e) => setIsMailAllow(!isMailAllow)}
                                                     style={{ margin: "5px 5px"}}
                                                 />
                                             </div>
