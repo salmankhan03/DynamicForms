@@ -653,18 +653,18 @@ const DynamicForm = () => {
                         <div className={'AddFormContainerHeader'} style={{display: 'flex', justifyContent: "space-between", margin: '10px 0 30px'}}>
                             <div style={{fontSize: '30px'}}>Form List</div>
                             <div>
-                                <button style={{
-                                    padding: '10px 20px',
-                                    fontSize: '16px',
-                                    backgroundColor: '#001529',
-                                    color: '#FFFFFF',
-                                    border: 'none',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer',
-                                    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                                    transition: 'background-color 0.3s ease',
-                                    marginRight: '10px'
-                                }} onClick={() => setPermissionShow(true)}>Add Permission</button>
+                                {/*<button style={{*/}
+                                {/*    padding: '10px 20px',*/}
+                                {/*    fontSize: '16px',*/}
+                                {/*    backgroundColor: '#001529',*/}
+                                {/*    color: '#FFFFFF',*/}
+                                {/*    border: 'none',*/}
+                                {/*    borderRadius: '4px',*/}
+                                {/*    cursor: 'pointer',*/}
+                                {/*    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',*/}
+                                {/*    transition: 'background-color 0.3s ease',*/}
+                                {/*    marginRight: '10px'*/}
+                                {/*}} onClick={() => setPermissionShow(true)}>Add Permission</button>*/}
                                 <button style={{
                                     padding: '10px 20px',
                                     fontSize: '16px',
