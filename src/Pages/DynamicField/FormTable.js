@@ -44,6 +44,9 @@ const FormTable = ({ formList, onEdit, onDelete, setSelectedRowKeys }) => {
             title: 'Publish',
             dataIndex: 'is_published',
             key: 'is_published',
+            render: (record) => (
+                record === 0 ? "No" : "Yes"
+            ),
         },
         {
             title: 'Actions',
