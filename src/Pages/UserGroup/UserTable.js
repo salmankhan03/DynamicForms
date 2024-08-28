@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { Table, Space, Checkbox, Tag, Button } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import './index.css'
 
 const UserTable = ({ users, onEdit, onDelete, setSelectedRowKeys, onEditPermissions  }) => {

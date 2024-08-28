@@ -62,6 +62,7 @@ const CategoryMenu = () => {
                     ...resp.list
                 ]));
                 setUsers(resp.list);
+                setUserTree(resp.list);
             }
         }).catch((error) => {
             notifyError(error);
@@ -216,7 +217,7 @@ const CategoryMenu = () => {
             >
                 <Row>
                     <Col xs={12} sm={12} md={12}>
-                        <div className={"sidebarLabel"}>Select user</div>
+                        <div className={"sidebarLabel"}>Select user group</div>
                         <Select placeholder="Select a name" onChange={handleChange} value={selectedUserName} style={{ width: '100%' }}>
                             {userTree.map(item => (
                                 <Option key={item.id} value={item.name}>{item.name}</Option>
