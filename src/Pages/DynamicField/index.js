@@ -268,7 +268,7 @@ const DynamicForm = () => {
             } else {
                 setFormJson(JSON.stringify(formFields, null, 2));
                 UserGroupServices.createForm({
-                    name: editFormName ? editFormName : 'Dynamic form',
+                    name: editFormName ? editFormName : 'Dynamic Form',
                     is_published: publishForm ? 1 : 0,
                     allow_mail: isMailAllow ? 1 : 0,
                     allow_print: isPrintAllow ? 1 : 0,
@@ -361,6 +361,10 @@ const DynamicForm = () => {
         setPage(page - 1)
     }
 
+    const handleError = () => {
+        notifyError(`Add at least one field`)
+    }
+
     return (
         <Layout style={{ minHeight: 'calc(100vh - 56px)' }}>
             <Toast />
@@ -382,11 +386,19 @@ const DynamicForm = () => {
                         <>
                             <Button onClick={handleNext} className="colorButton"> Next </Button>
                         </>,
-                        page === 2 &&
+
+                        page === 2 && formFields?.length > 0 &&
                         <>
                             <Button onClick={handleBack}> Back </Button>
                             <Button onClick={handleNext} className="colorButton"> Next </Button>
                         </>,
+
+                        page === 2 && formFields?.length === 0 &&
+                        <>
+                            <Button onClick={handleBack}> Back </Button>
+                            <Button onClick={handleError} className="colorButton"> Next </Button>
+                        </>,
+
                         page === 3 &&
                         <>
                             <Button onClick={handleBack}> Back </Button>
