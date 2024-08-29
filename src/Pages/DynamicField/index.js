@@ -257,9 +257,11 @@ const DynamicForm = () => {
                     fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
                 }).then((resp) => {
                     setShow(false)
-                    notifySuccess(`Form Json edit SuccessFully`);
+                    notifySuccess(`Form Edited SuccessFully`);
                     getFormList()
                     setFormFields([])
+                    setPage(1);
+                    setEditFormName('')
                 }).catch((error) => {
                     notifyError(`Something went wrong`);
                 })
@@ -273,10 +275,12 @@ const DynamicForm = () => {
                     fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
                 }).then((resp) => {
                     setShow(false)
-                    notifySuccess(`Form Json add SuccessFully`);
+                    notifySuccess(`Form Added SuccessFully`);
                     getFormList()
                     setFormFields([])
                     setEditFormId('')
+                    setPage(1);
+                    setEditFormName('')
                 }).catch((error) => {
                     notifyError(`Something went wrong`);
                 })
@@ -311,6 +315,8 @@ const DynamicForm = () => {
         setIsMailAllow('')
         setIsPrintAllow('')
         setPublishForm('')
+        setPage(1)
+        setEditFormName('')
     }
 
     const handlePermissionCancel = () => {
