@@ -361,7 +361,11 @@ const DynamicForm = () => {
         setPage(page - 1)
     }
 
-    const handleError = () => {
+    const handleNoNameError = () => {
+        notifyError(`Please enter form name`)
+    }
+
+    const handleNoFieldError = () => {
         notifyError(`Add at least one field`)
     }
 
@@ -374,29 +378,26 @@ const DynamicForm = () => {
                     title={editFormId ? "Edit Form" : "Create Form"}
                     centered
                     open={show}
-                    //onOk={generateFormJson}
-                    //okText={editFormId ? "Edit Form" : "Submit Form"}
-                    //okButtonProps={{
-                    //    style: { backgroundColor: '#001529' }
-                    //}}
                     onCancel={closeModal}
                     width={'75%'}
                     footer={[
                         page === 1 &&
                         <>
-                            <Button onClick={handleNext} className="colorButton"> Next </Button>
+                            {editFormName &&
+                                <Button onClick={handleNext} className="colorButton"> Next </Button>}
+                            {/* Disable next button when no name input */}
+                            {!editFormName &&
+                                <Button onClick={handleNoNameError} className="colorButton"> Next </Button>}    
                         </>,
 
-                        page === 2 && formFields?.length > 0 &&
+                        page === 2 && 
                         <>
                             <Button onClick={handleBack}> Back </Button>
-                            <Button onClick={handleNext} className="colorButton"> Next </Button>
-                        </>,
-
-                        page === 2 && formFields?.length === 0 &&
-                        <>
-                            <Button onClick={handleBack}> Back </Button>
-                            <Button onClick={handleError} className="colorButton"> Next </Button>
+                            {formFields?.length > 0 &&
+                                <Button onClick={handleNext} className="colorButton"> Next </Button>}
+                            {/* Disable next button when no field */}
+                            {formFields?.length === 0 &&
+                                <Button onClick={handleNoFieldError} className="colorButton"> Next </Button>}
                         </>,
 
                         page === 3 &&
