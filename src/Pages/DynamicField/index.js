@@ -87,7 +87,7 @@ const DynamicForm = () => {
     const handleDelete = formId => {
         UserGroupServices.deleteForm(formId).then((resp) => {
             if (resp) {
-                notifySuccess('form delete successFully')
+                notifySuccess('Form delete successfully')
                 getFormList()
             }
         }).catch((error) => {
@@ -262,6 +262,10 @@ const DynamicForm = () => {
                     setFormFields([])
                     setPage(1);
                     setEditFormName('')
+                    setIsMailAllow('')
+                    setIsPrintAllow('')
+                    setPublishForm('')
+                    setFieldType('');
                 }).catch((error) => {
                     notifyError(`Something went wrong`);
                 })
@@ -281,6 +285,10 @@ const DynamicForm = () => {
                     setEditFormId('')
                     setPage(1);
                     setEditFormName('')
+                    setIsMailAllow('')
+                    setIsPrintAllow('')
+                    setPublishForm('')
+                    setFieldType('');
                 }).catch((error) => {
                     notifyError(`Something went wrong`);
                 })
@@ -309,7 +317,7 @@ const DynamicForm = () => {
 
     const closeModal = () => {
         setShow(false)
-        setFieldType([])
+        setFieldType('')
         setFormFields([])
         setEditFormId('')
         setIsMailAllow('')
@@ -361,14 +369,6 @@ const DynamicForm = () => {
         setPage(page - 1)
     }
 
-    const handleNoNameError = () => {
-        notifyError(`Please enter form name`)
-    }
-
-    const handleNoFieldError = () => {
-        notifyError(`Add at least one field`)
-    }
-
     return (
         <Layout style={{ minHeight: 'calc(100vh - 56px)' }}>
             <Toast />
@@ -387,7 +387,7 @@ const DynamicForm = () => {
                                 <Button onClick={handleNext} className="colorButton"> Next </Button>}
                             {/* Disable next button when no name input */}
                             {!editFormName &&
-                                <Button onClick={handleNoNameError} className="colorButton"> Next </Button>}    
+                                <Button onClick={() => {notifyError(`Please enter form name`)}} className="colorButton"> Next </Button>}    
                         </>,
 
                         page === 2 && 
@@ -397,7 +397,7 @@ const DynamicForm = () => {
                                 <Button onClick={handleNext} className="colorButton"> Next </Button>}
                             {/* Disable next button when no field */}
                             {formFields?.length === 0 &&
-                                <Button onClick={handleNoFieldError} className="colorButton"> Next </Button>}
+                                <Button onClick={() => {notifyError(`Add at least one field`)}} className="colorButton"> Next </Button>}
                         </>,
 
                         page === 3 &&
