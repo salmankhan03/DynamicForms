@@ -7,6 +7,9 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import FormTable from "./FormTable";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+
 const { Option } = Select;
 
 const DynamicForm = () => {
@@ -77,7 +80,7 @@ const DynamicForm = () => {
         setShow(true)
         setEditFormId(form.id);
         setEditFormName(form.name)
-        const formData = JSON.parse(JSON.parse(form.form_fields) );
+        const formData = JSON.parse(JSON.parse(form.form_fields));
         setFormFields(formData);
         setPublishForm(form.is_published)
         setIsPrintAllow(form.allow_print)
@@ -227,7 +230,7 @@ const DynamicForm = () => {
         }
 
         setCounter(counter + 1);
-        notifySuccess(`Dynamic ${fieldType} field successfully add`);
+        notifySuccess(`Dynamic ${fieldType} field added successfully`);
         setFormFields([...formFields, newField]);
         setLabelInput('');
         setDefaultValue('');
@@ -241,6 +244,20 @@ const DynamicForm = () => {
         const newFormFields = [...formFields];
         newFormFields.splice(index, 1);
         setFormFields(newFormFields);
+    };
+
+    const editField = (field) => {
+        setPage(2)
+        setFieldType(field.fieldType)
+        setLabelInput(field.fieldLable)
+        let newField = {
+            fieldLabel: field.fieldLable,
+            fieldType: field.fieldType,
+            fieldSubType: field.fieldSubType,
+            fieldVal: field.fieldVal,
+            fieldOptions: field.fieldOptions,
+            fieldIsRequired: field.fieldIsRequired,
+        };
     };
 
     const generateFormJson = (e) => {
@@ -375,6 +392,7 @@ const DynamicForm = () => {
 
             <Layout style={{backgroundColor: '#F9FAFB'}}>
                 <Modal
+                    style = {{marginTop:'100px'}}
                     title={editFormId ? "Edit Form" : "Create Form"}
                     centered
                     open={show}
@@ -384,26 +402,26 @@ const DynamicForm = () => {
                         page === 1 &&
                         <>
                             {editFormName &&
-                                <Button onClick={handleNext} className="colorButton"> Next </Button>}
+                                <Button onClick={handleNext} className="nextButton"> Next </Button>}
                             {/* Disable next button when no name input */}
                             {!editFormName &&
-                                <Button onClick={() => {notifyError(`Please enter form name`)}} className="colorButton"> Next </Button>}    
+                                <Button onClick={() => {notifyError(`Please enter form name`)}} className="nextButton"> Next </Button>}    
                         </>,
 
                         page === 2 && 
                         <>
                             <Button onClick={handleBack}> Back </Button>
                             {formFields?.length > 0 &&
-                                <Button onClick={handleNext} className="colorButton"> Next </Button>}
+                                <Button onClick={handleNext} className="nextButton"> Next </Button>}
                             {/* Disable next button when no field */}
                             {formFields?.length === 0 &&
-                                <Button onClick={() => {notifyError(`Add at least one field`)}} className="colorButton"> Next </Button>}
+                                <Button onClick={() => {notifyError(`Add at least one field`)}} className="nextButton"> Next </Button>}
                         </>,
 
                         page === 3 &&
                         <>
                             <Button onClick={handleBack}> Back </Button>
-                            <Button onClick={generateFormJson} className="colorButton"> {editFormId ? "Edit Form" : "Submit Form"} </Button>
+                            <Button onClick={generateFormJson} className="nextButton"> {editFormId ? "Edit Form" : "Submit Form"} </Button>
                         </>
                     ]}
                 >
@@ -446,6 +464,7 @@ const DynamicForm = () => {
                                                     <Option value="video">Video</Option>
                                                     <Option value="media">Media</Option>
                                                 </Select>
+
                                                 {['date', 'datetime-local', 'email', 'tel', 'number', 'password', 'text', 'textarea'].includes(fieldType) && (
                                                     <>
                                                         <div className={"sidebarLabel"}>Add placeholder value</div>
@@ -466,6 +485,7 @@ const DynamicForm = () => {
                                                         />
                                                     </>
                                                 )}
+
                                                 {fieldType === 'select-input' && (
                                                     <div>
                                                         <div className={"sidebarLabel"}>Add form field label</div>
@@ -503,6 +523,7 @@ const DynamicForm = () => {
                                                         />
                                                     </div>
                                                 )}
+
                                                 {['checkbox', 'radio'].includes(fieldType) && (
                                                     <div>
                                                         <div className={"sidebarLabel"}>Add form field label</div>
@@ -540,6 +561,7 @@ const DynamicForm = () => {
                                                         />
                                                     </div>
                                                 )}
+
                                                 {(fieldType === 'image' || fieldType === 'video' || fieldType === 'media') && (
                                                     <div className={'optionsContainer'}>
                                                         <div>
@@ -569,6 +591,7 @@ const DynamicForm = () => {
                                                         </Select>
                                                     </div>
                                                 )}
+
                                                 {fieldType && (
                                                     <div>
                                                         <div>
@@ -632,6 +655,7 @@ const DynamicForm = () => {
                                             {formFields.map((field, index) => (
                                                 <div key={index} className="field" style={{ width: '100%', display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
                                                     <label>{field.fieldLabel}</label>
+
                                                     {field.fieldType === 'btnpicker' && (
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <select value={field.fieldVal} style={{ width: '100%' }} disabled>
@@ -639,9 +663,11 @@ const DynamicForm = () => {
                                                                     <option key={index} value={option}>{option}</option>
                                                                 ))}
                                                             </select>
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button> 
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
+
                                                     {['textfield', 'textarea', 'btndate'].includes(field.fieldType) && (
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             {field.fieldType === 'textarea' ? (
@@ -649,9 +675,11 @@ const DynamicForm = () => {
                                                             ) : (
                                                                 <input type={field.fieldSubType} value={field.fieldVal} style={{ width: '100%' }} readOnly />
                                                             )}
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button> 
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
+
                                                     {field.fieldType === 'checkbox' && (
                                                         <div>
                                                             {(Array.isArray(field.fieldOptions) ? field.fieldOptions : field.fieldOptions.split(',')).map((option, index) => (
@@ -665,9 +693,11 @@ const DynamicForm = () => {
                                                                     /> {option}
                                                                 </div>
                                                             ))}
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button> 
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
+
                                                     {field.fieldType === 'radiobutton' && (
                                                         <div>
                                                             {field.fieldOptions.split(',').map((option, index) => (
@@ -675,7 +705,8 @@ const DynamicForm = () => {
                                                                     <input type="radio" name={`radio_${index}`} value={option} checked={field.fieldVal === option} readOnly /> {option}
                                                                 </div>
                                                             ))}
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button> 
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
 
@@ -687,7 +718,8 @@ const DynamicForm = () => {
                                                                     <Option key={num} value={num.toString()}>{num}</Option>
                                                                 ))}
                                                             </Select>
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button> 
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
                                                 </div>

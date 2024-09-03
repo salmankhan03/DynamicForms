@@ -54,7 +54,7 @@ const FormTable = ({ formList, onEdit, onDelete, setSelectedRowKeys }) => {
             render: (text, record) => (
                 <Space size="middle">
                     <a onClick={() => onEdit(record)}><FontAwesomeIcon icon={faEdit} style={{ marginRight: '10px', cursor: 'pointer' }} /></a>
-                    <a onClick={() => onDelete(record.id)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></a>
+                    <a onClick={() => onDelete(record.id)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer', color: '#ff4444' }} /></a>
                 </Space>
             ),
         },
