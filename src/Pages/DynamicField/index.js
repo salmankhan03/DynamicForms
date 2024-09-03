@@ -247,17 +247,17 @@ const DynamicForm = () => {
     };
 
     const editField = (field) => {
-        setPage(2)
-        setFieldType(field.fieldType)
-        setLabelInput(field.fieldLable)
-        let newField = {
-            fieldLabel: field.fieldLable,
-            fieldType: field.fieldType,
-            fieldSubType: field.fieldSubType,
-            fieldVal: field.fieldVal,
-            fieldOptions: field.fieldOptions,
-            fieldIsRequired: field.fieldIsRequired,
-        };
+        // setPage(2)
+        // setFieldType(field.fieldType)
+        // setLabelInput(field.fieldLable)
+        // let newField = {
+        //     fieldLabel: field.fieldLable,
+        //     fieldType: field.fieldType,
+        //     fieldSubType: field.fieldSubType,
+        //     fieldVal: field.fieldVal,
+        //     fieldOptions: field.fieldOptions,
+        //     fieldIsRequired: field.fieldIsRequired,
+        // };
     };
 
     const generateFormJson = (e) => {
@@ -603,7 +603,7 @@ const DynamicForm = () => {
                                                                 style={{ margin: "5px 5px"}}
                                                             />
                                                         </div>
-                                                        <Button disabled={fieldType === 'checkbox' || fieldType === 'radio' || fieldType === 'select-input'  ? addFieldDisabled : false} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
+                                                        <Button disabled={!validateFields()} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
                                                     </div>
                                                 )}
                                             </div>
@@ -613,16 +613,13 @@ const DynamicForm = () => {
                                         {page === 3 &&
                                         <div>
                                             <div>
-                                                <div>
-                                                    <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Is Field Required:</label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={fieldIsRequired}
-                                                        onChange={() => setFieldIsRequired(!fieldIsRequired)}
-                                                        style={{ margin: "5px 5px"}}
-                                                    />
-                                                </div>
-                                                <Button disabled={!validateFields()} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
+                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Publish Form</label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={publishForm}
+                                                    onChange={(e) => setPublishForm(!publishForm)}
+                                                    style={{ margin: "5px 5px"}}
+                                                />
                                             </div>
                                             <div>
                                                 <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Print Form</label>
