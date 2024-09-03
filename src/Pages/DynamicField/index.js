@@ -318,6 +318,35 @@ const DynamicForm = () => {
         setSelectedUserName('')
     }
 
+    const validateFields = () => {
+        if (!labelInput.trim()) return false;
+
+        switch (fieldType) {
+            case 'select-input':
+            case 'checkbox':
+            case 'radio':
+                return selectOptions.some(option => option.trim());
+
+            case 'date':
+            case 'datetime-local':
+            case 'email':
+            case 'tel':
+            case 'number':
+            case 'password':
+            case 'text':
+            case 'textarea':
+                return labelInput.trim() !== '';
+
+            case 'image':
+            case 'video':
+            case 'media':
+                return labelInput.trim() !== '' && mediaOption;
+
+            default:
+                return true;
+        }
+    };
+
     return (
         <Layout style={{ minHeight: 'calc(100vh - 56px)' }}>
             <Toast />
@@ -501,7 +530,7 @@ const DynamicForm = () => {
                                                         style={{ margin: "5px 5px"}}
                                                     />
                                                 </div>
-                                                <Button disabled={fieldType === 'checkbox' || fieldType === 'radio' || fieldType === 'select-input'  ? addFieldDisabled : false} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
+                                                <Button disabled={!validateFields()} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
                                             </div>
                                         )}
                                     </div>
