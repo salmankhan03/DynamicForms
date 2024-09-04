@@ -651,7 +651,7 @@ const DynamicForm = () => {
                                             <h4 style={{textAlign: 'center', fontWeight: 800}}>{editFormName ? editFormName : 'Dynamic Form'}</h4>
                                             {formFields.map((field, index) => (
                                                 <div key={index} className="field" style={{ width: '100%', display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                                                    <label>{field.fieldLabel}</label>
+                                                    <label>{field.fieldLabel} {field.fieldIsRequired === 1 && '*'}</label>
 
                                                     {field.fieldType === 'btnpicker' && (
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
