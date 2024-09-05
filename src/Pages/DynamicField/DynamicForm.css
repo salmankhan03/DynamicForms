@@ -144,3 +144,13 @@
     background: #001529;
     color:#ffffff;
 }
+
+.title{
+    display: flex;
+    /* color: #001529; */
+    padding: 10px;
+    /* border: 1px solid #001529; */
+    margin-top: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+}
