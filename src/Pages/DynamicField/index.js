@@ -34,6 +34,7 @@ const DynamicForm = () => {
     const [isMailAllow, setIsMailAllow] = useState(1);
     const [show, setShow] = useState(false);
     const [permissionShow, setPermissionShow] = useState(false);
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
         getUserList()
@@ -318,6 +319,14 @@ const DynamicForm = () => {
         setSelectedUserName('')
     }
 
+    const handleNext = () => {
+        setPage(page + 1)
+    }
+
+    const handleBack = () => {
+        setPage(page - 1)
+    }
+
     const validateFields = () => {
         if (!labelInput.trim()) return false;
 
@@ -356,189 +365,249 @@ const DynamicForm = () => {
                     title={editFormId ? "Edit Form" : "Create Form"}
                     centered
                     open={show}
-                    onOk={generateFormJson}
-                    okText={editFormId ? "Edit Form" : "Submit Form"}
-                    okButtonProps={{
-                        style: { backgroundColor: '#001529' }
-                    }}
+                    //onOk={generateFormJson}
+                    //okText={editFormId ? "Edit Form" : "Submit Form"}
+                    //okButtonProps={{
+                    //    style: { backgroundColor: '#001529' }
+                    //}}
                     onCancel={closeModal}
                     width={'75%'}
+                    footer={[
+                        page === 1 &&
+                        <>
+                            <Button onClick={handleNext} className="colorButton"> Next </Button>
+                        </>,
+                        page === 2 &&
+                        <>
+                            <Button onClick={handleBack}> Back </Button>
+                            <Button onClick={handleNext} className="colorButton"> Next </Button>
+                        </>,
+                        page === 3 &&
+                        <>
+                            <Button onClick={handleBack}> Back </Button>
+                            <Button onClick={generateFormJson} className="colorButton"> {editFormId ? "Edit Form" : "Submit Form"} </Button>
+                        </>
+                    ]}
                 >
                         <Container>
                             <Row>
                                 <Col xs={12} sm={12} md={5}>
                                     <div className="addFieldContainer">
-                                        <div>
-                                            <div className={"sidebarLabel"}>Please Add Form Name</div>
-                                            <Input
-                                                type="text"
-                                                placeholder="Enter Form Name"
-                                                value={editFormName}
-                                                onChange={(e) => setEditFormName(e.target.value)}
-                                                className={'addFieldSelect'}
-                                            />
-                                            </div>
-                                        <div className={"sidebarLabel"}>Please select Field</div>
-                                        <Select value={fieldType} onChange={handleFieldTypeChange} className={'addFieldSelect'}>
-                                            <Option value="">Select Field Type</Option>
-                                            <Option value="checkbox">Checkbox</Option>
-                                            <Option value="date">Date</Option>
-                                            <Option value="datetime-local">Datetime-local</Option>
-                                            <Option value="email">Email</Option>
-                                            <Option value="tel">Tel</Option>
-                                            <Option value="number">Number</Option>
-                                            <Option value="password">Password</Option>
-                                            <Option value="text">Text</Option>
-                                            <Option value="textarea">Textarea</Option>
-                                            <Option value="select-input">Select</Option>
-                                            <Option value="radio">Radio</Option>
-                                            <Option value="image">Image</Option>
-                                            <Option value="video">Video</Option>
-                                            <Option value="media">Media</Option>
-                                        </Select>
-                                        {['date', 'datetime-local', 'email', 'tel', 'number', 'password', 'text', 'textarea'].includes(fieldType) && (
-                                            <>
-                                                <div className={"sidebarLabel"}>Add Placeholder value</div>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Set Default value"
-                                                    value={defaultValue}
-                                                    onChange={handleDefaultInputChange}
-                                                    className={'addFieldSelect'}
-                                                />
-                                                <div className={"sidebarLabel"}>Add Form field label</div>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Enter field label"
-                                                    value={labelInput}
-                                                    onChange={handleLabelInputChange}
-                                                    className={'addFieldSelect'}
-                                                />
-                                            </>
-                                        )}
-                                        {fieldType === 'select-input' && (
+                                        {/* Form name */}
+                                        {page === 1 &&
                                             <div>
-                                                <div className={"sidebarLabel"}>Add Form field label</div>
+                                                <div className={"sidebarLabel"}>Please enter form name</div>
                                                 <Input
                                                     type="text"
-                                                    placeholder="Enter field label"
-                                                    value={labelInput}
-                                                    onChange={handleLabelInputChange}
-                                                    className={'addFieldSelect'}
-                                                />
-                                                <div className={"sidebarLabel"}>Add Options value</div>
-                                                {selectOptions.map((optionInput, index) => (
-                                                    <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Input
-                                                            type="text"
-                                                            placeholder={`Enter option ${index + 1}`}
-                                                            value={optionInput}
-                                                            onChange={(e) => handleSelectOptionInputChange(index, e.target.value)}
-                                                            className={'addFieldSelect'}
-                                                        />
-                                                        {index > 0 && ( // Show close icon for options beyond the first three
-                                                            <Button type="link" danger onClick={() => handleRemoveOption(index)}>Remove</Button>
-                                                        )}
-                                                    </div>
-                                                ))}
-
-                                                <Button disabled={addOptionDisabled} style={{marginBottom: 10}} onClick={handleAddOption}>Add Option</Button>
-                                                <div className={"sidebarLabel"}>Add Default value</div>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Set Default value"
-                                                    value={defaultValue}
-                                                    onChange={handleDefaultInputChange}
+                                                    placeholder="Dynamic Form"
+                                                    value={editFormName}
+                                                    onChange={(e) => setEditFormName(e.target.value)}
                                                     className={'addFieldSelect'}
                                                 />
                                             </div>
-                                        )}
-                                        {['checkbox', 'radio'].includes(fieldType) && (
+                                        }
+
+                                        {/* Options */}
+                                        {page === 2 &&
                                             <div>
-                                                <div className={"sidebarLabel"}>Add Form field label</div>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Enter field label"
-                                                    value={labelInput}
-                                                    onChange={handleLabelInputChange}
-                                                    className={'addFieldSelect'}
-                                                />
-                                                <div className={"sidebarLabel"}>Add checkbox/radio title</div>
-                                                {selectOptions.map((optionInput, index) => (
-                                                    <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Input
-                                                            type="text"
-                                                            placeholder={`Enter option ${index + 1}`}
-                                                            value={optionInput}
-                                                            onChange={(e) => handleSelectOptionInputChange(index, e.target.value)}
-                                                            className={'addFieldSelect'}
-                                                        />
-                                                        {index > 0 && ( // Show close icon for options beyond the first three
-                                                            <Button type="link" danger onClick={() => handleRemoveOption(index)}>Remove</Button>
-                                                        )}
-                                                    </div>
-                                                ))}
-
-                                                <Button style={{margin: '5px 0'}} disabled={addOptionDisabled} style={{marginBottom: 10}} onClick={handleAddOption}>Add Multiple Options</Button>
-                                                <div className={"sidebarLabel"}>Set Default value</div>
-                                                <Input
-                                                    type="text"
-                                                    placeholder="Set Default value"
-                                                    value={defaultValue}
-                                                    onChange={handleDefaultInputChange}
-                                                    className={'addFieldSelect'}
-                                                />
-                                            </div>
-                                        )}
-                                        {(fieldType === 'image' || fieldType === 'video' || fieldType === 'media') && (
-                                            <div className={'optionsContainer'}>
-                                                <div>
-                                                    <div className={"sidebarLabel"}>Add Placeholder value</div>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Set Default value"
-                                                        value={defaultValue}
-                                                        onChange={handleDefaultInputChange}
-                                                        className={'addFieldSelect'}
-                                                    />
-                                                    <div className={"sidebarLabel"}>{`Add ${fieldType}`}</div>
-                                                    <Input
-                                                        type="text"
-                                                        placeholder="Enter field label"
-                                                        value={labelInput}
-                                                        onChange={handleLabelInputChange}
-                                                        className={'addFieldSelect'}
-                                                    />
-                                                </div>
-                                                <div className="sidebarLabel">Media Options:</div>
-                                                <Select value={mediaOption} onChange={handleMediaOptionChange} className={'mediaOptionSelect'} style={{width: '100%'}}>
-                                                    <Option value="">Select Media Option</Option>
-                                                    {Array.from({ length: 7 }, (_, i) => i + 1).map(num => (
-                                                        <Option key={num} value={num.toString()}>{num}</Option>
-                                                    ))}
+                                                <div className={"sidebarLabel"}>Please select a field type</div>
+                                                <Select value={fieldType} onChange={handleFieldTypeChange} className={'addFieldSelect'}>
+                                                    <Option value="">Select field type</Option>
+                                                    <Option value="checkbox">Checkbox</Option>
+                                                    <Option value="date">Date</Option>
+                                                    <Option value="datetime-local">Datetime-local</Option>
+                                                    <Option value="email">Email</Option>
+                                                    <Option value="tel">Tel</Option>
+                                                    <Option value="number">Number</Option>
+                                                    <Option value="password">Password</Option>
+                                                    <Option value="text">Text</Option>
+                                                    <Option value="textarea">Textarea</Option>
+                                                    <Option value="select-input">Select</Option>
+                                                    <Option value="radio">Radio</Option>
+                                                    <Option value="image">Image</Option>
+                                                    <Option value="video">Video</Option>
+                                                    <Option value="media">Media</Option>
                                                 </Select>
+                                                {['date', 'datetime-local', 'email', 'tel', 'number', 'password', 'text', 'textarea'].includes(fieldType) && (
+                                                    <>
+                                                        <div className={"sidebarLabel"}>Add placeholder value</div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Set Default value"
+                                                            value={defaultValue}
+                                                            onChange={handleDefaultInputChange}
+                                                            className={'addFieldSelect'}
+                                                        />
+                                                        <div className={"sidebarLabel"}>Add form field label</div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Enter field label"
+                                                            value={labelInput}
+                                                            onChange={handleLabelInputChange}
+                                                            className={'addFieldSelect'}
+                                                        />
+                                                    </>
+                                                )}
+                                                {fieldType === 'select-input' && (
+                                                    <div>
+                                                        <div className={"sidebarLabel"}>Add form field label</div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Enter field label"
+                                                            value={labelInput}
+                                                            onChange={handleLabelInputChange}
+                                                            className={'addFieldSelect'}
+                                                        />
+                                                        <div className={"sidebarLabel"}>Add options value</div>
+                                                        {selectOptions.map((optionInput, index) => (
+                                                            <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                                                <Input
+                                                                    type="text"
+                                                                    placeholder={`Enter option ${index + 1}`}
+                                                                    value={optionInput}
+                                                                    onChange={(e) => handleSelectOptionInputChange(index, e.target.value)}
+                                                                    className={'addFieldSelect'}
+                                                                />
+                                                                {index > 0 && ( // Show close icon for options beyond the first three
+                                                                    <Button type="link" danger onClick={() => handleRemoveOption(index)}>Remove</Button>
+                                                                )}
+                                                            </div>
+                                                        ))}
+
+                                                        <Button disabled={addOptionDisabled} style={{marginBottom: 10}} onClick={handleAddOption}>Add option</Button>
+                                                        <div className={"sidebarLabel"}>Add default value</div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Set Default value"
+                                                            value={defaultValue}
+                                                            onChange={handleDefaultInputChange}
+                                                            className={'addFieldSelect'}
+                                                        />
+                                                    </div>
+                                                )}
+                                                {['checkbox', 'radio'].includes(fieldType) && (
+                                                    <div>
+                                                        <div className={"sidebarLabel"}>Add form field label</div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Enter field label"
+                                                            value={labelInput}
+                                                            onChange={handleLabelInputChange}
+                                                            className={'addFieldSelect'}
+                                                        />
+                                                        <div className={"sidebarLabel"}>Add {fieldType} title</div>
+                                                        {selectOptions.map((optionInput, index) => (
+                                                            <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                                                <Input
+                                                                    type="text"
+                                                                    placeholder={`Enter option ${index + 1}`}
+                                                                    value={optionInput}
+                                                                    onChange={(e) => handleSelectOptionInputChange(index, e.target.value)}
+                                                                    className={'addFieldSelect'}
+                                                                />
+                                                                {index > 0 && ( // Show close icon for options beyond the first three
+                                                                    <Button type="link" danger onClick={() => handleRemoveOption(index)}>Remove</Button>
+                                                                )}
+                                                            </div>
+                                                        ))}
+
+                                                        <Button style={{margin: '5px 0', marginBottom: 10}} disabled={addOptionDisabled} onClick={handleAddOption}>Add another option</Button>
+                                                        <div className={"sidebarLabel"}>Set default value</div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Set Default value"
+                                                            value={defaultValue}
+                                                            onChange={handleDefaultInputChange}
+                                                            className={'addFieldSelect'}
+                                                        />
+                                                    </div>
+                                                )}
+                                                {(fieldType === 'image' || fieldType === 'video' || fieldType === 'media') && (
+                                                    <div className={'optionsContainer'}>
+                                                        <div>
+                                                            <div className={"sidebarLabel"}>Add placeholder value</div>
+                                                            <Input
+                                                                type="text"
+                                                                placeholder="Set Default value"
+                                                                value={defaultValue}
+                                                                onChange={handleDefaultInputChange}
+                                                                className={'addFieldSelect'}
+                                                            />
+                                                            <div className={"sidebarLabel"}>{`Add ${fieldType}`}</div>
+                                                            <Input
+                                                                type="text"
+                                                                placeholder="Enter field label"
+                                                                value={labelInput}
+                                                                onChange={handleLabelInputChange}
+                                                                className={'addFieldSelect'}
+                                                            />
+                                                        </div>
+                                                        <div className="sidebarLabel">Media options:</div>
+                                                        <Select value={mediaOption} onChange={handleMediaOptionChange} className={'mediaOptionSelect'} style={{width: '100%'}}>
+                                                            <Option value="">Select media option</Option>
+                                                            {Array.from({ length: 7 }, (_, i) => i + 1).map(num => (
+                                                                <Option key={num} value={num.toString()}>{num}</Option>
+                                                            ))}
+                                                        </Select>
+                                                    </div>
+                                                )}
+                                                {fieldType && (
+                                                    <div>
+                                                        <div>
+                                                            <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Is field required?</label>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={fieldIsRequired}
+                                                                onChange={() => setFieldIsRequired(!fieldIsRequired)}
+                                                                style={{ margin: "5px 5px"}}
+                                                            />
+                                                        </div>
+                                                        <Button disabled={!validateFields()} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                        {fieldType && (
+                                        }
+
+                                        {/* Publish/Print/Email */}
+                                        {page === 3 &&
+                                        <div>
                                             <div>
-                                                <div>
-                                                    <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Is Field Required:</label>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={fieldIsRequired}
-                                                        onChange={() => setFieldIsRequired(!fieldIsRequired)}
-                                                        style={{ margin: "5px 5px"}}
-                                                    />
-                                                </div>
-                                                <Button disabled={!validateFields()} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
+                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Publish Form</label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={publishForm}
+                                                    onChange={(e) => setPublishForm(!publishForm)}
+                                                    style={{ margin: "5px 5px"}}
+                                                />
                                             </div>
-                                        )}
+                                            <div>
+                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Print Form</label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isPrintAllow}
+                                                    onChange={(e) => setIsPrintAllow(!isPrintAllow)}
+                                                    style={{ margin: "5px 5px"}}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Email Form</label>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isMailAllow}
+                                                    onChange={(e) => setIsMailAllow(!isMailAllow)}
+                                                    style={{ margin: "5px 5px"}}
+                                                />
+                                            </div>
+                                        </div>
+                                        }
                                     </div>
                                 </Col>
+
+                                {/* Preview */}
                                 <Col xs={12} sm={12} md={7}>
                                     <div className="content">
                                         <form className="form">
-                                            <h4 style={{textAlign: 'center', fontWeight: 800}}>{editFormName ? editFormName : 'Dynamic form'}</h4>
+                                            <h4 style={{textAlign: 'center', fontWeight: 800}}>{editFormName ? editFormName : 'Dynamic Form'}</h4>
                                             {formFields.map((field, index) => (
                                                 <div key={index} className="field" style={{ width: '100%', display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
                                                     <label>{field.fieldLabel}</label>
@@ -602,33 +671,6 @@ const DynamicForm = () => {
                                                     )}
                                                 </div>
                                             ))}
-                                            <div>
-                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Publish Form</label>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={publishForm}
-                                                    onChange={(e) => setPublishForm(!publishForm)}
-                                                    style={{ margin: "5px 5px"}}
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Print Form</label>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={isPrintAllow}
-                                                    onChange={(e) => setIsPrintAllow(!isPrintAllow)}
-                                                    style={{ margin: "5px 5px"}}
-                                                />
-                                            </div>
-                                            <div>
-                                                <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Email Form</label>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={isMailAllow}
-                                                    onChange={(e) => setIsMailAllow(!isMailAllow)}
-                                                    style={{ margin: "5px 5px"}}
-                                                />
-                                            </div>
                                         </form>
                                     </div>
                                 </Col>
