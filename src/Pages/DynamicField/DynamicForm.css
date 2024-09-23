@@ -36,11 +36,26 @@
     border-radius: 4px;
 }
 
-.removeButton {
-    margin-left: 10px;
+.editButton {
+    margin-left: 5px;
     padding: 6px 10px;
-    background-color: #ff4444;
-    color: #fff;
+    background-color: #fff;
+    color: #001529;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.editButton:hover{
+    background-color: #001529 !important;
+    color: #fff !important;
+}
+
+.removeButton {
+    margin-left: 5px;
+    padding: 6px 10px;
+    background-color: #fff;
+    color: #ff4444;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -125,7 +140,17 @@
     }
 }
 
-.colorButton{
+.nextButton{
     background: #001529;
     color:#ffffff;
+}
+
+.title{
+    display: flex;
+    /* color: #001529; */
+    padding: 10px;
+    /* border: 1px solid #001529; */
+    margin-top: 10px;
+    background-color: #eee;
+    border-radius: 5px;
 }

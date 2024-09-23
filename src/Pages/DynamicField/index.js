@@ -7,6 +7,9 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import FormTable from "./FormTable";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt, faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons';
+
 const { Option } = Select;
 
 const DynamicForm = () => {
@@ -35,6 +38,9 @@ const DynamicForm = () => {
     const [show, setShow] = useState(false);
     const [permissionShow, setPermissionShow] = useState(false);
     const [page, setPage] = useState(1);
+    const [nameIsOpen, setNameIsOpen] = useState(false);
+    const [fieldIsOpen, setFieldIsOpen] = useState(false);
+    const [propertyIsOpen, setPropertyIsOpen] = useState(false);
 
     useEffect(() => {
         getUserList()
@@ -42,6 +48,20 @@ const DynamicForm = () => {
         getFormList()
     }, [])
 
+    // useEffect(() =>{
+    //     setFieldIsOpen(false)
+    //     setPropertyIsOpen(false)
+    // },[nameIsOpen === true])
+
+    // useEffect(() =>{
+    //     setNameIsOpen(false)
+    //     setPropertyIsOpen(false)
+    // },[fieldIsOpen === true])
+
+    // useEffect(() =>{
+    //     setNameIsOpen(false)
+    //     setFieldIsOpen(false)
+    // },[propertyIsOpen === true])
 
     function getFormList() {
         UserGroupServices.formList().then((resp) => {
@@ -77,7 +97,7 @@ const DynamicForm = () => {
         setShow(true)
         setEditFormId(form.id);
         setEditFormName(form.name)
-        const formData = JSON.parse(JSON.parse(form.form_fields) );
+        const formData = JSON.parse(JSON.parse(form.form_fields));
         setFormFields(formData);
         setPublishForm(form.is_published)
         setIsPrintAllow(form.allow_print)
@@ -87,7 +107,7 @@ const DynamicForm = () => {
     const handleDelete = formId => {
         UserGroupServices.deleteForm(formId).then((resp) => {
             if (resp) {
-                notifySuccess('form delete successFully')
+                notifySuccess('Form delete successfully')
                 getFormList()
             }
         }).catch((error) => {
@@ -227,7 +247,7 @@ const DynamicForm = () => {
         }
 
         setCounter(counter + 1);
-        notifySuccess(`Dynamic ${fieldType} field successfully add`);
+        notifySuccess(`Dynamic ${fieldType} field added successfully`);
         setFormFields([...formFields, newField]);
         setLabelInput('');
         setDefaultValue('');
@@ -241,6 +261,20 @@ const DynamicForm = () => {
         const newFormFields = [...formFields];
         newFormFields.splice(index, 1);
         setFormFields(newFormFields);
+    };
+
+    const editField = (field) => {
+        // setPage(2)
+        // setFieldType(field.fieldType)
+        // setLabelInput(field.fieldLable)
+        // let newField = {
+        //     fieldLabel: field.fieldLable,
+        //     fieldType: field.fieldType,
+        //     fieldSubType: field.fieldSubType,
+        //     fieldVal: field.fieldVal,
+        //     fieldOptions: field.fieldOptions,
+        //     fieldIsRequired: field.fieldIsRequired,
+        // };
     };
 
     const generateFormJson = (e) => {
@@ -257,26 +291,38 @@ const DynamicForm = () => {
                     fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
                 }).then((resp) => {
                     setShow(false)
-                    notifySuccess(`Form Json edit SuccessFully`);
+                    notifySuccess(`Form Edited SuccessFully`);
                     getFormList()
                     setFormFields([])
+                    setPage(1);
+                    setEditFormName('')
+                    setIsMailAllow('')
+                    setIsPrintAllow('')
+                    setPublishForm('')
+                    setFieldType('');
                 }).catch((error) => {
                     notifyError(`Something went wrong`);
                 })
             } else {
                 setFormJson(JSON.stringify(formFields, null, 2));
                 UserGroupServices.createForm({
-                    name: editFormName ? editFormName : 'Dynamic form',
+                    name: editFormName ? editFormName : 'Dynamic Form',
                     is_published: publishForm ? 1 : 0,
                     allow_mail: isMailAllow ? 1 : 0,
                     allow_print: isPrintAllow ? 1 : 0,
                     fields:  JSON.stringify(JSON.stringify(formFields, null, 2))
                 }).then((resp) => {
                     setShow(false)
-                    notifySuccess(`Form Json add SuccessFully`);
+                    notifySuccess(`Form Added SuccessFully`);
                     getFormList()
                     setFormFields([])
                     setEditFormId('')
+                    setPage(1);
+                    setEditFormName('')
+                    setIsMailAllow('')
+                    setIsPrintAllow('')
+                    setPublishForm('')
+                    setFieldType('');
                 }).catch((error) => {
                     notifyError(`Something went wrong`);
                 })
@@ -305,26 +351,20 @@ const DynamicForm = () => {
 
     const closeModal = () => {
         setShow(false)
-        setFieldType([])
+        setFieldType('')
         setFormFields([])
         setEditFormId('')
         setIsMailAllow('')
         setIsPrintAllow('')
         setPublishForm('')
+        setPage(1)
+        setEditFormName('')
     }
 
     const handlePermissionCancel = () => {
         setPermissionShow(false)
         setSelectedUserPermission()
         setSelectedUserName('')
-    }
-
-    const handleNext = () => {
-        setPage(page + 1)
-    }
-
-    const handleBack = () => {
-        setPage(page - 1)
     }
 
     const validateFields = () => {
@@ -355,37 +395,51 @@ const DynamicForm = () => {
                 return true;
         }
     };
+    const handleNext = () => {
+        setPage(page + 1)
+    }
+
+    const handleBack = () => {
+        setPage(page - 1)
+    }
 
     return (
         <Layout style={{ minHeight: 'calc(100vh - 56px)' }}>
             <Toast />
 
             <Layout style={{backgroundColor: '#F9FAFB'}}>
-                <Modal
+                {/* Create Form */}
+                {!editFormId && <Modal
+                    style = {{marginTop:'100px'}}
                     title={editFormId ? "Edit Form" : "Create Form"}
                     centered
                     open={show}
-                    //onOk={generateFormJson}
-                    //okText={editFormId ? "Edit Form" : "Submit Form"}
-                    //okButtonProps={{
-                    //    style: { backgroundColor: '#001529' }
-                    //}}
                     onCancel={closeModal}
                     width={'75%'}
                     footer={[
                         page === 1 &&
                         <>
-                            <Button onClick={handleNext} className="colorButton"> Next </Button>
+                            {editFormName &&
+                                <Button onClick={handleNext} className="nextButton"> Next </Button>}
+                            {/* Disable next button when no name input */}
+                            {!editFormName &&
+                                <Button onClick={() => {notifyError(`Please enter form name`)}} className="nextButton"> Next </Button>}
                         </>,
+
                         page === 2 &&
                         <>
                             <Button onClick={handleBack}> Back </Button>
-                            <Button onClick={handleNext} className="colorButton"> Next </Button>
+                            {formFields?.length > 0 &&
+                                <Button onClick={handleNext} className="nextButton"> Next </Button>}
+                            {/* Disable next button when no field */}
+                            {formFields?.length === 0 &&
+                                <Button onClick={() => {notifyError(`Add at least one field`)}} className="nextButton"> Next </Button>}
                         </>,
+
                         page === 3 &&
                         <>
                             <Button onClick={handleBack}> Back </Button>
-                            <Button onClick={generateFormJson} className="colorButton"> {editFormId ? "Edit Form" : "Submit Form"} </Button>
+                            <Button onClick={generateFormJson} className="nextButton"> {editFormId ? "Edit Form" : "Submit Form"} </Button>
                         </>
                     ]}
                 >
@@ -428,6 +482,7 @@ const DynamicForm = () => {
                                                     <Option value="video">Video</Option>
                                                     <Option value="media">Media</Option>
                                                 </Select>
+
                                                 {['date', 'datetime-local', 'email', 'tel', 'number', 'password', 'text', 'textarea'].includes(fieldType) && (
                                                     <>
                                                         <div className={"sidebarLabel"}>Add placeholder value</div>
@@ -448,6 +503,7 @@ const DynamicForm = () => {
                                                         />
                                                     </>
                                                 )}
+
                                                 {fieldType === 'select-input' && (
                                                     <div>
                                                         <div className={"sidebarLabel"}>Add form field label</div>
@@ -485,6 +541,7 @@ const DynamicForm = () => {
                                                         />
                                                     </div>
                                                 )}
+
                                                 {['checkbox', 'radio'].includes(fieldType) && (
                                                     <div>
                                                         <div className={"sidebarLabel"}>Add form field label</div>
@@ -522,6 +579,7 @@ const DynamicForm = () => {
                                                         />
                                                     </div>
                                                 )}
+
                                                 {(fieldType === 'image' || fieldType === 'video' || fieldType === 'media') && (
                                                     <div className={'optionsContainer'}>
                                                         <div>
@@ -551,6 +609,7 @@ const DynamicForm = () => {
                                                         </Select>
                                                     </div>
                                                 )}
+
                                                 {fieldType && (
                                                     <div>
                                                         <div>
@@ -610,7 +669,8 @@ const DynamicForm = () => {
                                             <h4 style={{textAlign: 'center', fontWeight: 800}}>{editFormName ? editFormName : 'Dynamic Form'}</h4>
                                             {formFields.map((field, index) => (
                                                 <div key={index} className="field" style={{ width: '100%', display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
-                                                    <label>{field.fieldLabel}</label>
+                                                    <label>{field.fieldLabel} {field.fieldIsRequired === 1 && '*'}</label>
+
                                                     {field.fieldType === 'btnpicker' && (
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             <select value={field.fieldVal} style={{ width: '100%' }} disabled>
@@ -618,9 +678,11 @@ const DynamicForm = () => {
                                                                     <option key={index} value={option}>{option}</option>
                                                                 ))}
                                                             </select>
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
+
                                                     {['textfield', 'textarea', 'btndate'].includes(field.fieldType) && (
                                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                                             {field.fieldType === 'textarea' ? (
@@ -628,9 +690,11 @@ const DynamicForm = () => {
                                                             ) : (
                                                                 <input type={field.fieldSubType} value={field.fieldVal} style={{ width: '100%' }} readOnly />
                                                             )}
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
+
                                                     {field.fieldType === 'checkbox' && (
                                                         <div>
                                                             {(Array.isArray(field.fieldOptions) ? field.fieldOptions : field.fieldOptions.split(',')).map((option, index) => (
@@ -644,9 +708,11 @@ const DynamicForm = () => {
                                                                     /> {option}
                                                                 </div>
                                                             ))}
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
+
                                                     {field.fieldType === 'radiobutton' && (
                                                         <div>
                                                             {field.fieldOptions.split(',').map((option, index) => (
@@ -654,7 +720,8 @@ const DynamicForm = () => {
                                                                     <input type="radio" name={`radio_${index}`} value={option} checked={field.fieldVal === option} readOnly /> {option}
                                                                 </div>
                                                             ))}
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
 
@@ -666,7 +733,8 @@ const DynamicForm = () => {
                                                                     <Option key={num} value={num.toString()}>{num}</Option>
                                                                 ))}
                                                             </Select>
-                                                            <Button className="removeButton" onClick={() => removeField(index)}>Remove</Button>
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
                                                         </div>
                                                     )}
                                                 </div>
@@ -677,7 +745,328 @@ const DynamicForm = () => {
                             </Row>
                         </Container>
 
-                </Modal>
+                </Modal>}
+
+                {/* Edit Form */}
+                {editFormId && <Modal
+                    style = {{marginTop:'100px'}}
+                    title={editFormId ? "Edit Form" : "Create Form"}
+                    centered
+                    open={show}
+                    onCancel={closeModal}
+                    width={'75%'}
+                    footer={[
+                        <>
+                            <Button onClick={closeModal}> Close </Button>
+                            <Button onClick={generateFormJson} className="nextButton"> {editFormId ? "Edit Form" : "Submit Form"} </Button>
+                        </>
+                    ]}
+                >
+                        <Container>
+                            <Row>
+                                <Col xs={12} sm={12} md={5}>
+                                    <div className="addFieldContainer">
+                                        {/* Form name */}
+                                        <div>
+                                            <div className={"title"} onClick={() => {setNameIsOpen(!nameIsOpen)}}>
+                                                <span>Form Name</span>
+                                                {nameIsOpen? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
+                                            </div>
+                                            {nameIsOpen && (<Input
+                                                type="text"
+                                                placeholder="Dynamic Form"
+                                                value={editFormName}
+                                                onChange={(e) => setEditFormName(e.target.value)}
+                                                className={'addFieldSelect'}
+                                            />)}
+                                        </div>
+
+                                        {/* Options */}
+                                        <div>
+                                        <div className={"title"} onClick={() => {setFieldIsOpen(!fieldIsOpen)}}>Add Fields</div>
+                                        {fieldIsOpen && (<div>
+                                            <Select value={fieldType} onChange={handleFieldTypeChange} className={'addFieldSelect'}>
+                                                <Option value="">Select field type</Option>
+                                                <Option value="checkbox">Checkbox</Option>
+                                                <Option value="date">Date</Option>
+                                                <Option value="datetime-local">Datetime-local</Option>
+                                                <Option value="email">Email</Option>
+                                                <Option value="tel">Tel</Option>
+                                                <Option value="number">Number</Option>
+                                                <Option value="password">Password</Option>
+                                                <Option value="text">Text</Option>
+                                                <Option value="textarea">Textarea</Option>
+                                                <Option value="select-input">Select</Option>
+                                                <Option value="radio">Radio</Option>
+                                                <Option value="image">Image</Option>
+                                                <Option value="video">Video</Option>
+                                                <Option value="media">Media</Option>
+                                            </Select>
+
+                                            {['date', 'datetime-local', 'email', 'tel', 'number', 'password', 'text', 'textarea'].includes(fieldType) && (
+                                                <>
+                                                    <div className={"sidebarLabel"}>Add placeholder value</div>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Set Default value"
+                                                        value={defaultValue}
+                                                        onChange={handleDefaultInputChange}
+                                                        className={'addFieldSelect'}
+                                                    />
+                                                    <div className={"sidebarLabel"}>Add form field label</div>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Enter field label"
+                                                        value={labelInput}
+                                                        onChange={handleLabelInputChange}
+                                                        className={'addFieldSelect'}
+                                                    />
+                                                </>
+                                            )}
+
+                                            {fieldType === 'select-input' && (
+                                                <div>
+                                                    <div className={"sidebarLabel"}>Add form field label</div>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Enter field label"
+                                                        value={labelInput}
+                                                        onChange={handleLabelInputChange}
+                                                        className={'addFieldSelect'}
+                                                    />
+                                                    <div className={"sidebarLabel"}>Add options value</div>
+                                                    {selectOptions.map((optionInput, index) => (
+                                                        <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                                            <Input
+                                                                type="text"
+                                                                placeholder={`Enter option ${index + 1}`}
+                                                                value={optionInput}
+                                                                onChange={(e) => handleSelectOptionInputChange(index, e.target.value)}
+                                                                className={'addFieldSelect'}
+                                                            />
+                                                            {index > 0 && ( // Show close icon for options beyond the first three
+                                                                <Button type="link" danger onClick={() => handleRemoveOption(index)}>Remove</Button>
+                                                            )}
+                                                        </div>
+                                                    ))}
+
+                                                    <Button disabled={addOptionDisabled} style={{marginBottom: 10}} onClick={handleAddOption}>Add option</Button>
+                                                    <div className={"sidebarLabel"}>Add default value</div>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Set Default value"
+                                                        value={defaultValue}
+                                                        onChange={handleDefaultInputChange}
+                                                        className={'addFieldSelect'}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {['checkbox', 'radio'].includes(fieldType) && (
+                                                <div>
+                                                    <div className={"sidebarLabel"}>Add form field label</div>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Enter field label"
+                                                        value={labelInput}
+                                                        onChange={handleLabelInputChange}
+                                                        className={'addFieldSelect'}
+                                                    />
+                                                    <div className={"sidebarLabel"}>Add {fieldType} title</div>
+                                                    {selectOptions.map((optionInput, index) => (
+                                                        <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+                                                            <Input
+                                                                type="text"
+                                                                placeholder={`Enter option ${index + 1}`}
+                                                                value={optionInput}
+                                                                onChange={(e) => handleSelectOptionInputChange(index, e.target.value)}
+                                                                className={'addFieldSelect'}
+                                                            />
+                                                            {index > 0 && ( // Show close icon for options beyond the first three
+                                                                <Button type="link" danger onClick={() => handleRemoveOption(index)}>Remove</Button>
+                                                            )}
+                                                        </div>
+                                                    ))}
+
+                                                    <Button style={{margin: '5px 0', marginBottom: 10}} disabled={addOptionDisabled} onClick={handleAddOption}>Add another option</Button>
+                                                    <div className={"sidebarLabel"}>Set default value</div>
+                                                    <Input
+                                                        type="text"
+                                                        placeholder="Set Default value"
+                                                        value={defaultValue}
+                                                        onChange={handleDefaultInputChange}
+                                                        className={'addFieldSelect'}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {(fieldType === 'image' || fieldType === 'video' || fieldType === 'media') && (
+                                                <div className={'optionsContainer'}>
+                                                    <div>
+                                                        <div className={"sidebarLabel"}>Add placeholder value</div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Set Default value"
+                                                            value={defaultValue}
+                                                            onChange={handleDefaultInputChange}
+                                                            className={'addFieldSelect'}
+                                                        />
+                                                        <div className={"sidebarLabel"}>{`Add ${fieldType}`}</div>
+                                                        <Input
+                                                            type="text"
+                                                            placeholder="Enter field label"
+                                                            value={labelInput}
+                                                            onChange={handleLabelInputChange}
+                                                            className={'addFieldSelect'}
+                                                        />
+                                                    </div>
+                                                    <div className="sidebarLabel">Media options:</div>
+                                                    <Select value={mediaOption} onChange={handleMediaOptionChange} className={'mediaOptionSelect'} style={{width: '100%'}}>
+                                                        <Option value="">Select media option</Option>
+                                                        {Array.from({ length: 7 }, (_, i) => i + 1).map(num => (
+                                                            <Option key={num} value={num.toString()}>{num}</Option>
+                                                        ))}
+                                                    </Select>
+                                                </div>
+                                            )}
+
+                                            {fieldType && (
+                                                <div>
+                                                    <div>
+                                                        <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Is field required?</label>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={fieldIsRequired}
+                                                            onChange={() => setFieldIsRequired(!fieldIsRequired)}
+                                                            style={{ margin: "5px 5px"}}
+                                                        />
+                                                    </div>
+                                                    <Button disabled={!validateFields()} className={"AddButton"} onClick={addField}>Add {fieldType}</Button>
+                                                </div>
+                                            )}
+                                        </div>)}
+                                        </div>
+
+                                        {/* Properties */}
+                                        <div>
+                                            <div className={"title"} onClick={() => {setPropertyIsOpen(!propertyIsOpen)}}>Properties</div>
+                                            {propertyIsOpen && (<div>
+                                                <div>
+                                                    <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Publish Form</label>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={publishForm}
+                                                        onChange={(e) => setPublishForm(!publishForm)}
+                                                        style={{ margin: "5px 5px"}}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Print Form</label>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isPrintAllow}
+                                                        onChange={(e) => setIsPrintAllow(!isPrintAllow)}
+                                                        style={{ margin: "5px 5px"}}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className={'sidebarLabel'} style={{ margin: "10px 0"}}>Email Form</label>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isMailAllow}
+                                                        onChange={(e) => setIsMailAllow(!isMailAllow)}
+                                                        style={{ margin: "5px 5px"}}
+                                                    />
+                                                </div>
+                                            </div>)}
+                                        </div>
+                                    </div>
+                                </Col>
+
+                                {/* Preview */}
+                                <Col xs={12} sm={12} md={7}>
+                                    <div className="content">
+                                        <form className="form">
+                                            <h4 style={{textAlign: 'center', fontWeight: 800}}>{editFormName ? editFormName : 'Dynamic Form'}</h4>
+                                            {formFields.map((field, index) => (
+                                                <div key={index} className="field" style={{ width: '100%', display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
+                                                    <label>{field.fieldLabel} {field.fieldIsRequired === 1 && '*'}</label>
+
+                                                    {field.fieldType === 'btnpicker' && (
+                                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                            <select value={field.fieldVal} style={{ width: '100%' }} disabled>
+                                                                {field.fieldOptions.split(',').map((option, index) => (
+                                                                    <option key={index} value={option}>{option}</option>
+                                                                ))}
+                                                            </select>
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
+                                                        </div>
+                                                    )}
+
+                                                    {['textfield', 'textarea', 'btndate'].includes(field.fieldType) && (
+                                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                            {field.fieldType === 'textarea' ? (
+                                                                <textarea value={field.fieldVal} style={{ width: '100%' }} readOnly />
+                                                            ) : (
+                                                                <input type={field.fieldSubType} value={field.fieldVal} style={{ width: '100%' }} readOnly />
+                                                            )}
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
+                                                        </div>
+                                                    )}
+
+                                                    {field.fieldType === 'checkbox' && (
+                                                        <div>
+                                                            {(Array.isArray(field.fieldOptions) ? field.fieldOptions : field.fieldOptions.split(',')).map((option, index) => (
+                                                                <div key={index} style={{ width: '100%' }}>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        name={`checkbox_${index}`}
+                                                                        value={option}
+                                                                        checked={field.fieldVal.split(',').includes(option)}
+                                                                        disabled
+                                                                    /> {option}
+                                                                </div>
+                                                            ))}
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
+                                                        </div>
+                                                    )}
+
+                                                    {field.fieldType === 'radiobutton' && (
+                                                        <div>
+                                                            {field.fieldOptions.split(',').map((option, index) => (
+                                                                <div key={index} style={{ width: '100%' }}>
+                                                                    <input type="radio" name={`radio_${index}`} value={option} checked={field.fieldVal === option} readOnly /> {option}
+                                                                </div>
+                                                            ))}
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
+                                                        </div>
+                                                    )}
+
+                                                    {field.fieldType === 'media' && (
+                                                        <div>
+                                                            <label>{field.fieldVal}</label>
+                                                            <Select style={{width: '100%'}} defaultValue={field.fieldOptions}>
+                                                                {Array.from({ length: 7 }, (_, i) => i + 1).map(num => (
+                                                                    <Option key={num} value={num.toString()}>{num}</Option>
+                                                                ))}
+                                                            </Select>
+                                                            {/* <Button className="editButton" onClick={() => editField(field)}><FontAwesomeIcon icon={faEdit} style={{ cursor: 'pointer' }} /></Button>  */}
+                                                            <Button className="removeButton" onClick={() => removeField(index)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></Button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </form>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Container>
+
+                </Modal>}
 
                 <Modal
                     title="Add Permisson"

@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
-import { Table, Space, Checkbox, Tag, Button } from 'antd';
+import { Table, Space, Checkbox, Tag, Button, Modal } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import './index.css'
 
 const UserTable = ({ users, onEdit, onDelete, setSelectedRowKeys, onEditPermissions  }) => {
+    const { confirm } = Modal;
+    const showDeleteConfirm = (record) => {
+        confirm({
+          title: 'Are you sure to delete this form?',
+          centered: 'true',
+          okText: 'Yes',
+          okType: 'danger',
+          cancelText: 'No',
+          onOk() {
+            onDelete(record.id);
+          },
+        });
+      };
+
     const [selectedRowKeysInternal, setSelectedRowKeysInternal] = useState([]);
 
     const columns = [
@@ -38,7 +52,7 @@ const UserTable = ({ users, onEdit, onDelete, setSelectedRowKeys, onEditPermissi
             render: (text, record) => (
                 <Space size="middle">
                     <a onClick={() => onEdit(record)}><FontAwesomeIcon icon={faEdit} style={{ marginRight: '10px', cursor: 'pointer' }} /></a>
-                    <a onClick={() => onDelete(record.id)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer' }} /></a>
+                    <a onClick={() => showDeleteConfirm(record)}><FontAwesomeIcon icon={faTrashAlt} style={{ cursor: 'pointer', color: '#ff4444' }} /></a>
                 </Space>
             ),
         },

@@ -2,20 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1a396984-47b4-4a90-b16f-d3b5f51de438" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Components/Navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/Navbar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pages/DynamicField/DynamicForm.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/DynamicField/DynamicForm.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pages/DynamicField/FormTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/DynamicField/FormTable.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pages/DynamicField/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/DynamicField/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/User/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/User/User.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pages/User/UserTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/User/UserTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/User/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/User/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/UserGroup/User.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/UserGroup/User.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pages/UserGroup/UserTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/UserGroup/UserTable.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/UserGroupServices.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/UserGroupServices.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/formApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/formApi.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
