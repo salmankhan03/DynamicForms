@@ -1,5 +1,4 @@
-# CPN-FrontEnd-UI
-<!-- GETTING STARTED -->
+
 ## Getting Started
 
 ### Prerequisites
